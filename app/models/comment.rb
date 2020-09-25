@@ -1,5 +1,5 @@
 class Comment < ApplicationRecord
   belongs_to :post
   belongs_to :user
-  has_many :likes
+  has_many :comment_likes, :dependent => :delete_all
 end
