@@ -10,7 +10,7 @@ class PostSerializer < ActiveModel::Serializer
   end
 
   def comments 
-    object.comments.map {|comment| {id: comment.id, content: comment.conten, post_id: comment.post_id, user_id: comment.user_id}}
+    object.comments.map {|comment| CommentSerializer.new(comment)}
   end
 
 end
