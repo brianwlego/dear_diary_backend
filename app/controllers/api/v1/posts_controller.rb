@@ -2,21 +2,29 @@ class Api::V1::PostsController < ApplicationController
 
   def show
     post = Post.find(params[:id])
-    render json: PostSerializer.new(post), status: :accepted
+    render json: { post: PostSerializer.new(post) } , status: :accepted
   end
 
   def create
-    post = Post.create(content: post_params[:content], user_id: current_user.id)
+    # VALIDATION TO CHECK CURRENT USER AGAINST POST USER FROM FRONT END
+    if current_user.id === post_params[:user_id]
+      post = Post.create(post_params)
+    end
+    # SENDING BACK EITHER CREATED POST OR FAILED ERROR
     if post.valid?
-      render json: post, status: :accepted
+      render json: {post: PostSerializer.new(post) } , status: :accepted
     else 
       render json: { error: 'Failed to create post' }, status: :not_acceptable
     end
   end
 
   def update
-    post = Post.find(params[:id])
-    post.update(post_params)
+    # VALIDATION TO CHECK CURRENT USER AGAINST POST USER FROM FRONT END
+    if current_user.id === post_params[:user_id]
+      post = Post.find(params[:id])
+      post.update(post_params)
+    end
+    # SENDING BACK EITHER CREATED POST OR FAILED ERROR
     if post.valid?
       render json: {post: PostSerializer.new(post)}, status: :accepted
     else
@@ -25,8 +33,12 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def destroy
-    post = Post.find(params[:id])
-    post.destroy
+    # VALIDATION TO CHECK CURRENT USER AGAINST POST USER FROM FRONT END
+    if current_user.id === post_params[:user_id]
+      post = Post.find(params[:id])
+      post.destroy
+    end
+    # SENDING BACK EITHER CREATED POST OR FAILED ERROR
     if !post.save
       render json: {}, status: :accepted
     else
@@ -34,31 +46,39 @@ class Api::V1::PostsController < ApplicationController
     end
   end
 
+####### METHODS TO EITHER LIKE OR UNLIKE A POST ########
 
   def like
-    new_like = PostLike.create(post_like_params)
-    post = Post.find(new_like.post_id)
+    if current_user.id === post_like_params[:user_id]
+      new_like = PostLike.create(post_like_params)
+    end
+    post = Post.find(params[:post_id])
     if new_like.valid?
-      render json: post, include: [:likes, :comments], status: :accepted
+      render json: {post: PostSerializer.new(post)}, status: :accepted
     else
       render json: {error: "Failed to like post"}, status: :not_acceptable
     end
   end 
 
   def unlike
-    like = CommentLike.find(params[:id])
+    like = PostLike.find(params[:id])
     like.destroy
-    if !like.id
-      render json: {success: "Like deleted"}, status: :accepted
+    post = Post.find(params[:post_id])
+    if !like.save
+      render json: {post: PostSerializer.new(post)}, status: :accepted
     else
       render json: {error: "Failed to delete like"}, status: :not_acceptable
     end
   end
 
+
+
   private
 
+
+
   def post_params
-    params.require(:post).permit(:content)
+    params.require(:post).permit(:content, :user_id)
   end
 
   def post_like_params

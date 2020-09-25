@@ -5,12 +5,15 @@ Rails.application.routes.draw do
       post '/login', to: 'auth#create'
       get '/profile', to: 'users#profile'
       
+      # CRUD Action for Posts
       resources :posts, only: [:show, :create, :update, :destroy] do 
-        post '/posts/:id/like', to: 'comments#like'
-        delete '/posts/:id/unlike', to: 'comments#unlike'
+        post '/like', to: 'posts#like'
+        delete '/unlike/:id', to: 'posts#unlike'
+        # Nested CRUD action for Comments
+        # ie. localhost:3000/posts/:id/comments/
         resources :comments, only: [:show, :create, :update, :destroy]
-        post '/comments/:id/like', to: 'comments#like'
-        delete '/comments/:id/unlike', to: 'comments#unlike'
+        post '/like', to: 'comments#like'
+        delete '/unlike/:id', to: 'comments#unlike'
       end
 
     end
