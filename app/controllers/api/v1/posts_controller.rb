@@ -2,8 +2,9 @@ class Api::V1::PostsController < ApplicationController
 
   def show
     post = Post.find(params[:id])
-    render json: { post: PostSerializer.new(post) } , status: :accepted
+    render json: { post: PostSerializer.new(post) }, status: :accepted
   end
+
 
   def create
     # VALIDATION TO CHECK CURRENT USER AGAINST POST USER FROM FRONT END

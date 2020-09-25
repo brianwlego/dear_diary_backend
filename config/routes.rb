@@ -1,12 +1,12 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      resources :users, only: [:create]
+      resources :users, only: [:create, :show]
       post '/login', to: 'auth#create'
       get '/profile', to: 'users#profile'
       
       # CRUD Action for Posts
-      resources :posts, only: [:show, :create, :update, :destroy] do 
+      resources :posts, only: [:show, :create, :update, :destroy, :index] do 
         post '/like', to: 'posts#like'
         delete '/unlike/:id', to: 'posts#unlike'
         # Nested CRUD action for Comments
