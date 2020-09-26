@@ -1,7 +1,13 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      resources :users, only: [:create, :show]
+      resources :users, only: [:create, :show] do 
+      post '/follow', to: 'users#follow'
+      post '/unfollow', to: 'users#unfollow'
+      get '/followers', to: 'users#followers'
+      get '/followings', to: 'users#followings'
+      end
+      
       post '/login', to: 'auth#create'
       get '/profile', to: 'users#profile'
       
