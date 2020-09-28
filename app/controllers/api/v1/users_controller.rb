@@ -52,6 +52,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def followings
+    # byebug
     user = User.find(params[:user_id])
     render json: { followers: UserSerializer.new(user).followings }, status: :accepted
   end
