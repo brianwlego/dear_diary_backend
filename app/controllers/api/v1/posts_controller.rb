@@ -49,15 +49,22 @@ class Api::V1::PostsController < ApplicationController
 ####### METHODS TO EITHER LIKE OR UNLIKE A POST ########
 
   def like
-    if current_user.id === post_like_params[:user_id]
-      new_like = PostLike.create(post_like_params)
-    end
-    post = Post.find(params[:post_id])
-    if new_like.valid?
-      render json: {post: PostSerializer.new(post)}, status: :accepted
+    found = PostLike.find_by(user_id: current_user.id, post_id: post_like_params[:post_id])
+    if found 
+        render json: { error: "Failed to like post, post has already been liked by this user." }
     else
-      render json: {error: "Failed to like post"}, status: :not_acceptable
+      if current_user.id === post_like_params[:user_id]
+        new_like = PostLike.create(post_like_params)
+      end
+      post = Post.find(params[:post_id])
+      if new_like.valid?
+        render json: {post: PostSerializer.new(post)}, status: :accepted
+      else
+        render json: {error: "Failed to like post"}, status: :not_acceptable
+      end
     end
+
+
   end 
 
   def unlike

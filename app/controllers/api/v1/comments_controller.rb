@@ -4,7 +4,7 @@ class Api::V1::CommentsController < ApplicationController
     comment = Comment.create(comment_params)
     post = Post.find(comment_params[:post_id])
     if comment.valid?
-      render json: { post: PostSerializer.new(post) }, status: :accepted
+      render json: { post: PostSerializer.new(post), comment: comment.user }, status: :accepted
     else 
       render json: { error: 'Failed to create comment' }, status: :not_acceptable
     end
@@ -33,12 +33,17 @@ class Api::V1::CommentsController < ApplicationController
   end
 
   def like
-    new_like = CommentLike.create(comment_like_params)
-    comment = Comment.find(new_like.comment_id)
-    if new_like.valid?
-      render json: { comment: CommentSerializer.new(comment) }, status: :accepted
+    found = CommentLike.find_by(user_id: current_user.id, comment_id: comment_like_params[:comment_id])
+    if found
+      render json: { error: "Failed to like comment, comment has already been liked by this user." }
     else
-      render json: {error: "Failed to like comment", comment: comment }, status: :not_acceptable
+      new_like = CommentLike.create(comment_like_params)
+      comment = Comment.find(new_like.comment_id)
+      if new_like.valid?
+        render json: { comment: CommentSerializer.new(comment) }, status: :accepted
+      else
+        render json: {error: "Failed to like comment.", comment: comment }, status: :not_acceptable
+      end
     end
   end 
 
@@ -49,7 +54,7 @@ class Api::V1::CommentsController < ApplicationController
     if !like.save
       render json: { comment: CommentSerializer.new(comment) }, status: :accepted
     else
-      render json: {error: "Failed to delete like"}, status: :not_acceptable
+      render json: {error: "Failed to delete like."}, status: :not_acceptable
     end
   end
 
