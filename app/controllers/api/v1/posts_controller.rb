@@ -85,7 +85,7 @@ class Api::V1::PostsController < ApplicationController
 
 
   def post_params
-    params.require(:post).permit(:content, :user_id)
+    params.require(:post).permit(:content, :user_id, :profile_user_id)
   end
 
   def post_like_params
