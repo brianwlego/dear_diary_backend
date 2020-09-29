@@ -11,8 +11,12 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def show
-    user = User.find(params[:id])
-    render json: { user: UserSerializer.new(user) }, stats: :accepted
+    #FINDS ALL POSTS FOR SPECIFIED PROFILE#
+    posts = Post.where(profile_user_id: params[:id])
+    #MAPS THROUGH TO GET ALL ASSOCIATIONS OF POST#
+    newArray = posts.map{ |post| PostSerializer.new(post) }
+    #RETURNS ARRAY OF ALL POSTS FOR PROFILE
+    render json: { posts: newArray }, stats: :accepted
   end
 
   def create

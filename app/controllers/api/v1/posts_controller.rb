@@ -9,7 +9,7 @@ class Api::V1::PostsController < ApplicationController
   def create
     # VALIDATION TO CHECK CURRENT USER AGAINST POST USER FROM FRONT END
     post = Post.create(post_params)
-   
+  
     # SENDING BACK EITHER CREATED POST OR FAILED ERROR
     if post.valid?
       render json: {post: PostSerializer.new(post) } , status: :accepted
