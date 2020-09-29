@@ -11,6 +11,11 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def show
+    user = User.find(params[:id])
+    render json: { user: UserSerializer.new(user) }, stats: :accepted
+  end
+
+  def posts
     #FINDS ALL POSTS FOR SPECIFIED PROFILE#
     posts = Post.where(profile_user_id: params[:id])
     #MAPS THROUGH TO GET ALL ASSOCIATIONS OF POST#
@@ -21,6 +26,7 @@ class Api::V1::UsersController < ApplicationController
 
   def create
     user = User.create(user_params)
+
     if user.valid?
       token = encode_token({ user_id: user.id })
       render json: { user: UserSerializer.new(user), jwt: token }, status: :created
@@ -64,7 +70,7 @@ class Api::V1::UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :birthdate, :img_url)
+    params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :birthdate, :img_url, :profile_picture)
   end
 
   def follow_params
