@@ -9,7 +9,11 @@ class UserSerializer < ActiveModel::Serializer
   end
 
   def pic_url
-    rails_blob_url(object.profile_picture, only_path: true)
+    if object.profile_picture.attached? == true 
+      rails_blob_url(object.profile_picture, only_path: true)
+    else
+      ""
+    end
   end
 
   def followers
