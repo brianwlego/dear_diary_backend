@@ -27,7 +27,6 @@ class Api::V1::UsersController < ApplicationController
 
   def create
     user = User.create(user_params)
-    byebug
     if params[:profile_picture] != ''
       user.profile_picture.attach(params[:profile_picture])
     end
@@ -74,7 +73,7 @@ class Api::V1::UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :birthdate, :img_url, :profile_picture)
+    params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :birthdate)
   end
 
   def follow_params

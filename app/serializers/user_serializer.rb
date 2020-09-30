@@ -1,6 +1,6 @@
 class UserSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
-  attributes :id, :first_name, :last_name, :email, :birthdate, :user_name, :pic_url
+  attributes :id, :first_name, :last_name, :email, :user_name, :pic_url, :birthday
   has_many :posts
 
 
@@ -14,6 +14,10 @@ class UserSerializer < ActiveModel::Serializer
     else
       ""
     end
+  end
+
+  def birthday
+    object.birthday_readable
   end
 
   def followers

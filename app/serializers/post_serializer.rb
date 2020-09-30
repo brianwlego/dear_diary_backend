@@ -1,5 +1,6 @@
 class PostSerializer < ActiveModel::Serializer
-  attributes :id, :content, :user_name, :post_likes, :comments, :user_id, :profile_user_id, :created_at, :updated_at, :time
+  include Rails.application.routes.url_helpers
+  attributes :id, :content, :user_name, :post_likes, :comments, :user_id, :profile_user_id, :time, :post_user_url
 
   def user_name
     object.user.first_name + " " + object.user.last_name
@@ -17,4 +18,11 @@ class PostSerializer < ActiveModel::Serializer
     object.determine_time
   end
 
+  def post_user_url
+    if object.user.profile_picture.attached? == true 
+      rails_blob_url(object.user.profile_picture, only_path: true)
+    else
+      ""
+    end
+  end
 end
