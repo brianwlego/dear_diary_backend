@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :users, only: [:index, :create, :show] do
+      get '/posts', to: 'users#posts'
       post '/follow', to: 'users#follow'
       post '/unfollow', to: 'users#unfollow'
       get '/followers', to: 'users#followers'
