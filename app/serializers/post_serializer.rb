@@ -1,8 +1,12 @@
 class PostSerializer < ActiveModel::Serializer
-  attributes :id, :content, :user_name, :post_likes, :comments, :user_id, :profile_user_id, :created_at, :updated_at, :time
+  attributes :id, :content, :user_name, :post_likes, :comments, :user_id, :profile_user_id, :created_at, :updated_at, :time, :post_user_url
 
   def user_name
     object.user.first_name + " " + object.user.last_name
+  end
+
+  def post_user_url
+    object.user.img_url
   end
 
   def post_likes
