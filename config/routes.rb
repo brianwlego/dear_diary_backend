@@ -8,7 +8,7 @@ Rails.application.routes.draw do
       get '/followers', to: 'users#followers'
       get '/followings', to: 'users#followings'
       end
-      
+
       post '/login', to: 'auth#create'
       get '/profile', to: 'users#profile'
       
