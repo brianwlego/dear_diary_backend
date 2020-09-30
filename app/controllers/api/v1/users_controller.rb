@@ -27,7 +27,9 @@ class Api::V1::UsersController < ApplicationController
 
   def create
     user = User.create(user_params)
-
+    if params[:profile_picture] != ''
+      user.profile_picture.attach(params[:profile_picture])
+    end
     if user.valid?
       token = encode_token({ user_id: user.id })
       render json: { user: UserSerializer.new(user), jwt: token }, status: :created
@@ -71,7 +73,7 @@ class Api::V1::UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :birthdate, :img_url, :profile_picture)
+    params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :birthdate)
   end
 
   def follow_params
