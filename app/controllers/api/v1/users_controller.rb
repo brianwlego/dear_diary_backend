@@ -18,7 +18,6 @@ class Api::V1::UsersController < ApplicationController
   def posts
     #FINDS ALL POSTS FOR SPECIFIED PROFILE#
     posts = Post.where(profile_user_id: params[:user_id])
-    byebug
     # byebug
     #MAPS THROUGH TO GET ALL ASSOCIATIONS OF POST#
     newArray = posts.map{ |post| PostSerializer.new(post) }
