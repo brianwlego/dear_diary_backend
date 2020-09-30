@@ -29,3 +29,5 @@
 
 # API CLIENT ID & CLIENT SECRET
 .env
+
+/config/credentials/development.key
