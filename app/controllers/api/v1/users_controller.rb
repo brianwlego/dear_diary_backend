@@ -26,8 +26,8 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def create
-    # byebug
     user = User.create(user_params)
+    byebug
     if params[:profile_picture] != ''
       user.profile_picture.attach(params[:profile_picture])
     end
