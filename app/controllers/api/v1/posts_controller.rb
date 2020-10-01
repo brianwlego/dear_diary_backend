@@ -6,13 +6,14 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def create
-
     post = Post.create(post_params)
-    if params[:post_photo] != "null"
-      photo = Photo.create(post_id: post.id, img_url: "")
-      photo.post_photo.attach(params[:post_photo])
-      photo.img_url = url_for(photo.post_photo)
-      photo.save
+    if params[:post_photo] != nil
+      params[:post_photo].each do |post_photo|
+        photo = Photo.create(post_id: post.id, img_url: "")
+        photo.post_photo.attach(post_photo[1])
+        photo.img_url = url_for(photo.post_photo)
+        photo.save
+      end
     end
     # SENDING BACK EITHER CREATED POST OR FAILED ERROR
     if post.valid?
