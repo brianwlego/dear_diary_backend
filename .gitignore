@@ -24,8 +24,8 @@
 .byebug_history
 
 # Ignore master key for decrypting credentials and more.
+/config/credentials.yml.enc
 /config/master.key
-../config/credentials.yml.enc
 
 # API CLIENT ID & CLIENT SECRET
 .env
