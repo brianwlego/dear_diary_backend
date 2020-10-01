@@ -4,6 +4,7 @@ class Post < ApplicationRecord
     has_many :users, through: :post_likes
     has_many :comments, :dependent => :delete_all
     has_many :users, through: :comments
+    has_many :photos, :dependent => :delete_all
 
 
     def determine_time

@@ -6,8 +6,14 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def create
-    # VALIDATION TO CHECK CURRENT USER AGAINST POST USER FROM FRONT END
+
     post = Post.create(post_params)
+    if params[:post_photo] != "null"
+      photo = Photo.create(post_id: post.id, img_url: "")
+      photo.post_photo.attach(params[:post_photo])
+      photo.img_url = url_for(photo.post_photo)
+      photo.save
+    end
     # SENDING BACK EITHER CREATED POST OR FAILED ERROR
     if post.valid?
       render json: {post: PostSerializer.new(post) } , status: :accepted

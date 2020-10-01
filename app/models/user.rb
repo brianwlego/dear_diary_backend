@@ -22,6 +22,7 @@ class User < ApplicationRecord
 
   has_one_attached :profile_picture
 
+  
   def birthday_readable
     self.birthdate.strftime("%B %d")
   end
