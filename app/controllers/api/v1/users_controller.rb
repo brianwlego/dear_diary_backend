@@ -1,7 +1,7 @@
 class Api::V1::UsersController < ApplicationController
   skip_before_action :authorized, only: [:create]
 
-  def profile
+  def profile1
     render json: { user: UserSerializer.new(current_user) }, status: :accepted
   end
 
@@ -10,25 +10,31 @@ class Api::V1::UsersController < ApplicationController
     render json: users
   end
 
+  def home
+    user = User.find(params[:user_id])
+    posts = user.filter_home_posts
+    render json: { posts: posts}, stats: :accepted
+  end
+
   def show
     user = User.find(params[:id])
     render json: { user: UserSerializer.new(user) }, stats: :accepted
   end
 
-  def posts
-    #FINDS ALL POSTS FOR SPECIFIED PROFILE#
-    posts = Post.where(profile_user_id: params[:user_id])
-    # byebug
-    #MAPS THROUGH TO GET ALL ASSOCIATIONS OF POST#
+  def profile2
+    posts = Post.where(profile_user_id: params[:user_id].to_i)
     newArray = posts.map{ |post| PostSerializer.new(post) }
-    #RETURNS ARRAY OF ALL POSTS FOR PROFILE
-    render json: { posts: newArray }, stats: :accepted
+    user = User.find(params[:user_id])
+    u = UserSerializer.new(user)
+    render json: { user: u, posts: newArray }, stats: :accepted
   end
 
   def create
     user = User.create(user_params)
     if params[:profile_picture] != ''
       user.profile_picture.attach(params[:profile_picture])
+      user.img_url = url_for(user.profile_picture)
+      user.save
     end
     if user.valid?
       token = encode_token({ user_id: user.id })
@@ -39,12 +45,16 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def follow
-    follow = Follow.create(follow_params)
-    user = User.find(follow_params[:followed_user_id])
-    if follow.valid?
-      render json: { user: UserSerializer.new(user)}, status: :accepted
+    found = Follow.find_by(follower_id: current_user.id, followed_user_id: follow_params[:followed_user_id])
+    if found 
+        render json: { error: "Failed to like post, post has already been liked by this user." }
     else
-      render json: { error: "Failed to follow user" }, status: :not_acceptable
+      follow = Follow.create(follow_params)
+      if follow.valid?
+        render json: { success: "New follow created"}, status: :accepted
+      else
+        render json: { error: "Failed to follow user" }, status: :not_acceptable
+      end
     end
   end
 
@@ -53,7 +63,7 @@ class Api::V1::UsersController < ApplicationController
     user = User.find(follow_params[:followed_user_id])
     follow.destroy 
     if !follow.save
-      render json: { user: UserSerializer.new(user) }, status: :accepted
+      render json: { success: "Follow was deleted" }, status: :accepted
     else
       render json: { error: "Failed to unfollow user" }, status: :not_acceptable
     end
