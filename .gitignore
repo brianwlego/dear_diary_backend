@@ -31,5 +31,4 @@
 # API CLIENT ID & CLIENT SECRET
 .env
 
-
 /config/credentials.yml.enc
