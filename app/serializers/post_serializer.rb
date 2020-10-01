@@ -1,6 +1,6 @@
 class PostSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
-  attributes :id, :content, :user_name, :post_likes, :comments, :user_id, :profile_user_id, :time, :post_user_url
+  attributes :id, :content, :user_name, :post_likes, :comments, :user_id, :profile_user_id, :time, :post_user_url, :created_at
 
   def user_name
     object.user.first_name + " " + object.user.last_name
