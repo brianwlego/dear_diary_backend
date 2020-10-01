@@ -5,11 +5,9 @@ class Api::V1::PostsController < ApplicationController
     render json: { post: PostSerializer.new(post) }, status: :accepted
   end
 
-
   def create
     # VALIDATION TO CHECK CURRENT USER AGAINST POST USER FROM FRONT END
     post = Post.create(post_params)
-  # byebug
     # SENDING BACK EITHER CREATED POST OR FAILED ERROR
     if post.valid?
       render json: {post: PostSerializer.new(post) } , status: :accepted
@@ -40,7 +38,7 @@ class Api::V1::PostsController < ApplicationController
     end
     # SENDING BACK EITHER CREATED POST OR FAILED ERROR
     if !post.save
-      render json: {}, status: :accepted
+      render json: { success: "Deleted post" }, status: :accepted
     else
       render json: {error: 'Failed to delete post', post: post}, status: :not_acceptable
     end
