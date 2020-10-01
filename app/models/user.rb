@@ -19,6 +19,18 @@ class User < ApplicationRecord
 
   has_one_attached :profile_picture
 
+  def birthday_readable
+    self.birthdate.strftime("%B %d")
+  end
+
+  def filter_home_posts
+    user_posts = self.posts.where("profile_user_id = ? AND user_id = ?", self.id, self.id)
+
+    friends_posts = self.followings.map {|user| user.posts.where("profile_user_id = ? AND user_id = ?", user.id, user.id)}
+    combined = user_posts += friends_posts
+    final = combined.flatten.map {|post| PostSerializer.new(post)}
+  end
+
 
 
 end

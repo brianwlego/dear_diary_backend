@@ -2,15 +2,16 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :users, only: [:index, :create, :show] do
-      get '/posts', to: 'users#posts'
+      get '/profile', to: 'users#profile2'
       post '/follow', to: 'users#follow'
       post '/unfollow', to: 'users#unfollow'
       get '/followers', to: 'users#followers'
       get '/followings', to: 'users#followings'
+      get '/home', to: 'users#home'
       end
 
       post '/login', to: 'auth#create'
-      get '/profile', to: 'users#profile'
+      get '/profile', to: 'users#profile1'
       
       # CRUD Action for Posts
       resources :posts, only: [:show, :create, :update, :destroy, :index] do 
