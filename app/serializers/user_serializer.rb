@@ -1,5 +1,5 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :first_name, :last_name, :email, :user_name, :img_url, :birthday, :profile_friends
+  attributes :id, :first_name, :last_name, :email, :user_name, :img_url, :birthday, :profile_friends, :bio, :location, :work
   # has_many :posts
 
 
@@ -7,7 +7,11 @@ class UserSerializer < ActiveModel::Serializer
     object.first_name + " " + object.last_name
   end
   def birthday
-    object.birthday_readable
+    if object.birthdate != nil
+      object.birthday_readable
+    else
+      ""
+    end
   end
 
   def profile_friends

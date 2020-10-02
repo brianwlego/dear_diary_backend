@@ -38,9 +38,11 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def destroy
-    # VALIDATION TO CHECK CURRENT USER AGAINST POST USER FROM FRONT END
     if current_user.id === post_params[:user_id]
       post = Post.find(params[:id])
+      if post.photos.length > 0
+        post.photos.each {|photo| photo.post_photo.purge_later}
+      end
       post.destroy
     end
     # SENDING BACK EITHER CREATED POST OR FAILED ERROR
