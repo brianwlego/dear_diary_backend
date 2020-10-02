@@ -4,7 +4,7 @@ class User < ApplicationRecord
   has_many :post_likes, through: :posts, :dependent => :delete_all
   has_many :comment_likes, through: :comments, :dependent => :delete_all
 
-  validates :first_name, :last_name, :email, :password_digest, presence: true
+  validates :first_name, :birthdate, :last_name, :email, :password_digest, presence: true
   validates :email, uniqueness: true
 
 

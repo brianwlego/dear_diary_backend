@@ -44,6 +44,18 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def update
+    if current_user.id === params[:id].to_i
+      user = User.find(params[:id])
+      user.update(user_params)
+    end
+    if user.valid?
+      render json: { user: UserSerializer.new(user) }, status: :accepted
+    else
+      render json: { error: "Failed to update User"}, statu: :not_acceptable
+    end
+  end
+
   def follow
     found = Follow.find_by(follower_id: current_user.id, followed_user_id: follow_params[:followed_user_id])
     if found 
@@ -83,7 +95,7 @@ class Api::V1::UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :birthdate)
+    params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :birthdate, :bio, :work, :location)
   end
 
   def follow_params
