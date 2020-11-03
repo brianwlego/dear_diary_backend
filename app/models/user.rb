@@ -34,5 +34,14 @@ class User < ApplicationRecord
   end
 
 
+  def save_image(image, user)
+    name = File.basename(image)
+    obj = S3_BUCKET.object(name)
+    obj.upload_file(image)
+    user.img_url = obj.public_url.to_s
+    user.save
+  end
+
+
 
 end
