@@ -10,31 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_02_134704) do
+ActiveRecord::Schema.define(version: 2020_10_01_145258) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "active_storage_attachments", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "record_type", null: false
-    t.bigint "record_id", null: false
-    t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
-    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
-    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
-  end
-
-  create_table "active_storage_blobs", force: :cascade do |t|
-    t.string "key", null: false
-    t.string "filename", null: false
-    t.string "content_type"
-    t.text "metadata"
-    t.bigint "byte_size", null: false
-    t.string "checksum", null: false
-    t.datetime "created_at", null: false
-    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
-  end
 
   create_table "comment_likes", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -81,15 +60,18 @@ ActiveRecord::Schema.define(version: 2020_10_02_134704) do
 
   create_table "posts", force: :cascade do |t|
     t.bigint "user_id", null: false
+    t.integer "profile_user_id"
     t.string "content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "profile_user_id"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
     t.string "first_name"
+    t.string "bio"
+    t.string "work"
+    t.string "location"
     t.string "last_name"
     t.datetime "birthdate"
     t.string "img_url"
@@ -97,12 +79,8 @@ ActiveRecord::Schema.define(version: 2020_10_02_134704) do
     t.string "password_digest"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "bio"
-    t.string "work"
-    t.string "location"
   end
 
-  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comment_likes", "comments"
   add_foreign_key "comment_likes", "users"
   add_foreign_key "comments", "posts"
