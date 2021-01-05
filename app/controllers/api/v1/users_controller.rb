@@ -1,8 +1,12 @@
 class Api::V1::UsersController < ApplicationController
-  skip_before_action :authorized, only: [:create]
+  skip_before_action :authorized, only: [:create, :wakeup]
 
   def profile1
     render json: { user: UserSerializer.new(current_user) }, status: :accepted
+  end
+
+  def wakeup
+    render json: { msg: "!fcebook, I'm awake!!" }
   end
 
   def index
