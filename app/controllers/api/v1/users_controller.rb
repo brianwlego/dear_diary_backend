@@ -6,7 +6,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def wakeup
-    render json: { msg: "!fcebook, I'm awake!!" }
+    render json: { msg: "!fcebook-backend, I'm awake!!" }
   end
 
   def index
